@@ -44,6 +44,15 @@ SDL2/
 # Visual Studio 2017 auto generated files
 Generated\ Files/
 
+#CmakeCache
+CMakeCache.txt
+cmake_install.cmake
+
+#Visualstudio filetrs and vcxproj
+*.vcxproj
+*.vcxproj.filters
+*.sln
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*

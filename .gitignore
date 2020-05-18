@@ -35,6 +35,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 SDL2/
+[Cc]makeFiles/
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
@@ -42,6 +43,15 @@ SDL2/
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/
+
+#CmakeCache
+CMakeCache.txt
+cmake_install.cmake
+
+#Visualstudio filetrs and vcxproj
+*.vcxproj
+*.vcxproj.filters
+*.sln
 
 # MSTest test Results
 [Tt]est[Rr]esult*/

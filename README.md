@@ -36,7 +36,8 @@ cmake_help/WindowsHelper.bat
 ```
 ### Run CMAKE and set build path to in same path as source
 #Doxygen
-
 http://cs.harding.edu/gfoust/doxygen.html
 http://cs.harding.edu/gfoust/simple_doxygen.txt
 http://www.doxygen.nl/manual/config.html
+### If doxygen fails to run dot needs graphviz-2.38 installed and %PATH
+for %f in (*dot) do dot %~nxf -Tpng -o %~nf.png

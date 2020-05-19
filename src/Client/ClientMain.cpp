@@ -3,17 +3,20 @@ and may not be redistributed without written permission.*/
 
 //Using SDL and standard IO
 //#include <SDL.h>
+#include <SDL.h>
+#undef main
 #include "Game.h"
 Game* game = nullptr;
-int main(int argc, char* argv[])
+using namespace DebugLog;
+int main(int argc, const char* argv[])
 {
 	const int FPS = 60;
 	const int FRAMEDELAY = 1000 / FPS;
 	Uint32 frameStar;
-	int frameTime;
+	float_t frameTime;
 	game = new Game();
 	game->Init("Gasta2D", 800, 640, false);
-	while (game->Running())
+	while (game->running())
 	{
 		frameStar = SDL_GetTicks();
 		game->HandleEvents();

@@ -1,14 +1,18 @@
 #include "Game.h"
+#include "TextureLoader.h"
+#include "../ECS/ECS.h"
+#include "../ECS/Components.h"
 //Erormessages
 using namespace DebugLog;
-Game::Game()
-{
-}
+Scene scene;
 
-Game::~Game()
-{
-}
-void Game::Init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
+SDL_Renderer* Game::renderer = nullptr; //This becaus SDL IS NOT INITIALIZED YET
+
+auto& player(scene.AddEntity());
+
+Game::Game(){}
+Game::~Game(){}
+void Game::Init(const char* title, int width, int height, bool fullscreen)
 {
 	int flags = 0;
 	if (fullscreen)
@@ -18,7 +22,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) //If 0 everything is OK!
 	{
 		//SuccessMSG("Subsystems Initialised!...");
-		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
+		window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
 		if (window)
 		{
 			SuccessMSG("Window created");
@@ -36,6 +40,9 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 		ErrorMSG("Game Init() failed!");
 		isRunning = false;
 	}
+
+	player.addComponent<PositionC>(0,0);
+	player.addComponent<SpriteC>("img/Dirt.png");
 }
 void Game::HandleEvents()
 {
@@ -53,10 +60,18 @@ void Game::HandleEvents()
 void Game::Update()
 {
 	//Update objects
+	scene.Refresh();
+	scene.Update();//This will update all entities and then components
+	std::cout << player.getComponent<PositionC>().x() << " : " << player.getComponent<PositionC>().y() << "\n";
+	if (player.getComponent<PositionC>().x() > 100)
+	{
+		player.getComponent<SpriteC>().SetTexture("img/Water.png");
+	}
 }
 void Game::Render()
 {
 	SDL_RenderClear(renderer);
+	scene.Draw();
 	//Render objects
 	SDL_RenderPresent(renderer);
 }

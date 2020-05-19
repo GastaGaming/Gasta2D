@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Gasta2D
-   &#160;<span id="projectnumber">0.0.2</span>
+   &#160;<span id="projectnumber">0.0.3</span>
    </div>
   </td>
  </tr>
@@ -46,6 +46,7 @@ $(function() {
 });
 /* @license-end */</script>
 <div id="main-nav"></div>
+</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -60,14 +61,9 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f6675a7e1cd1d6d7f6e5e9669ead62e8.html">Server</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">DataBaseHandler.h</div>  </div>
+<div class="title">G:/002_Repot/GitHub/Gasta2D/src/Server/DataBaseHandler.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
@@ -100,10 +96,10 @@ $(function() {
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> Login(std::string name, std::string pw);</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> ListTables();</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">bool</span> DbOpenCheck(<span class="keywordtype">int</span> rc, <a class="code" href="structsqlite3.html">sqlite3</a>* db);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">bool</span> DbOpenCheck(<span class="keywordtype">int</span> rc, sqlite3* db);</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">bool</span> DbTableCheck(<span class="keywordtype">int</span> rc);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">bool</span> DbRecordCheck(<span class="keywordtype">int</span> rc);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="structsqlite3.html">sqlite3</a>* db;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    sqlite3* db;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">char</span>* zErrMsg = 0;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">int</span> rc;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* sql;</div>
@@ -139,7 +135,7 @@ $(function() {
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    DbRecordCheck(rc);</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    sqlite3_close(db);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">bool</span> DatabaseHandler::DbOpenCheck(<span class="keywordtype">int</span> rc, <a class="code" href="structsqlite3.html">sqlite3</a>* db)</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">bool</span> DatabaseHandler::DbOpenCheck(<span class="keywordtype">int</span> rc, sqlite3* db)</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;{</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span> (rc) {</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        printf(<span class="stringliteral">&quot;%c[%dm__________________\n&quot;</span>, 0x1B, 31);<span class="comment">//Red</span></div>
@@ -354,8 +350,7 @@ $(function() {
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    sqlite3_close(db);</div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="astructsqlite3_html"><div class="ttname"><a href="structsqlite3.html">sqlite3</a></div><div class="ttdef"><b>Definition:</b> <a href="sqlite3_8c_source.html#l16693">sqlite3.c:16693</a></div></div>
-<div class="ttc" id="aclass_database_handler_html"><div class="ttname"><a href="class_database_handler.html">DatabaseHandler</a></div><div class="ttdef"><b>Definition:</b> <a href="_data_base_handler_8h_source.html#l00012">DataBaseHandler.h:12</a></div></div>
+<div class="ttc" id="aclass_database_handler_html"><div class="ttname"><a href="class_database_handler.html">DatabaseHandler</a></div><div class="ttdef"><b>Definition:</b> DataBaseHandler.h:12</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

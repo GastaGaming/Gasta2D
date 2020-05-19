@@ -8,7 +8,8 @@
 #include "DataBaseHandler.h"
 #include <Windows.h>
 #include "sha256.h"
-
+#include <cstring>
+#include <sstream>
 #include "SDL.h"
 #include "SDL_net.h"
 //#include "../Network.h"
@@ -98,161 +99,164 @@ inline bool file_exists(const std::string& name) {
 
 int main()
 {
-	//std::setlocale(LC_ALL, " ");
-	//std::locale::global(std::locale(""));
-	//std::cout.imbue(std::locale());
-	//string input;
-	//bool reset = false;
-	//bool quit = false;
-	//MainHelper mh;
-	//if (file_exists("GameServer.db"))
-	//{
-	//	printf("%c[%dm", 0x1B, 33);//Yellow
-	//	while (mh.inputOk != true)
-	//	{
-	//		cout << "Do you wanna DELETE OLD DataBase? Y | N to continue\n";
-	//		cin >> input;
-	//		if (input == "Y" || input == "y")
-	//		{
-	//			reset = true;
-	//			if (remove("GameServer.db") != 0)
-	//			{
-	//				printf("%c[%dm", 0x1B, 31);//Red
-	//				perror("Error deleting file");
-	//			}
-	//			else
-	//			{
-	//				printf("%c[%dm", 0x1B, 32);//Green
-	//				puts("File successfully deleted");
-	//			}
-	//			printf("%c[%dm", 0x1B, 39);//White
-	//			mh.inputOk = true;
-	//		}
-	//		else if (input == "N" || input == "n")
-	//		{
-	//			reset = false;
-	//			mh.inputOk = true;
-	//		}
-	//		else
-	//		{
-	//			printf("%c[%dm", 0x1B, 31);//Red
-	//			cout << "Input not valid\n";
-	//		}
-	//	}
-	//}
-	//else
-	//{
-	//	reset = true;
-	//}
-	//mh.inputOk = false;
-	//if (reset == true)
-	//{
-	//	while (mh.inputOk != true)
-	//	{
-	//		cout << "Do you wanna inatilaze Debug database? Y | N to continue\n";
-	//		cin >> input;
-	//		if (input == "Y" || input == "y")
-	//		{
-	//			printf("%c[%dm\n__________________\n", 0x1B, 32);//Green
-	//			cout << "Walid input Y";
-	//			Initialize database tables and fill debug info
-	//			mh.inputOk = true;
-	//			mh.CreateTables();
-	//			mh.FillTables();
+	std::setlocale(LC_ALL, " ");
+	std::locale::global(std::locale(""));
+	std::cout.imbue(std::locale());
+	string input;
+	bool reset = false;
+	bool quit = false;
+	MainHelper mh;
+	if (file_exists("GameServer.db"))
+	{
+		printf("%c[%dm", 0x1B, 33);//Yellow
+		while (mh.inputOk != true)
+		{
+			cout << "Do you wanna DELETE OLD DataBase? Y | N to continue\n";
+			cin >> input;
+			if (input == "Y" || input == "y")
+			{
+				reset = true;
+				if (remove("GameServer.db") != 0)
+				{
+					printf("%c[%dm", 0x1B, 31);//Red
+					perror("Error deleting file");
+				}
+				else
+				{
+					printf("%c[%dm", 0x1B, 32);//Green
+					puts("File successfully deleted");
+				}
+				printf("%c[%dm", 0x1B, 39);//White
+				mh.inputOk = true;
+			}
+			else if (input == "N" || input == "n")
+			{
+				reset = false;
+				mh.inputOk = true;
+			}
+			else
+			{
+				printf("%c[%dm", 0x1B, 31);//Red
+				cout << "Input not valid\n";
+			}
+		}
+	}
+	else
+	{
+		reset = true;
+	}
+	mh.inputOk = false;
+	if (reset == true)
+	{
+		while (mh.inputOk != true)
+		{
+			cout << "Do you wanna inatilaze Debug database? Y | N to continue\n";
+			cin >> input;
+			if (input == "Y" || input == "y")
+			{
+				printf("%c[%dm\n__________________\n", 0x1B, 32);//Green
+				cout << "Walid input Y";
+				//Initialize database tables and fill debug info
+				mh.inputOk = true;
+				mh.CreateTables();
+				mh.FillTables();
 
-	//		}
-	//		else if (input == "N" || input == "n")
-	//		{
-	//			printf("%c[%dm", 0x1B, 32);//Green
-	//			cout << "Walid input N\n";
-	//			mh.inputOk = true;
-	//			Initialize database tables, but leave data empty.
-	//			mh.CreateTables();
-	//		}
-	//		else
-	//		{
-	//			printf("%c[%dm", 0x1B, 31);//Red
-	//			cout << "Input not valid\n";
-	//		}
-	//		mh.inputOk = true;
-	//	}
-	//}
+			}
+			else if (input == "N" || input == "n")
+			{
+				printf("%c[%dm", 0x1B, 32);//Green
+				cout << "Walid input N\n";
+				mh.inputOk = true;
+				//Initialize database tables, but leave data empty.
+				mh.CreateTables();
+			}
+			else
+			{
+				printf("%c[%dm", 0x1B, 31);//Red
+				cout << "Input not valid\n";
+			}
+			mh.inputOk = true;
+		}
+	}
 	//Natiivi kokeilu 1
 
-	//int PORT = 1023;
-	//LogMSG("Starting server........\n");
-	//if (SDL_Init(0) == -1) {
-	//	printf("SDL_Init: %s\n", SDL_GetError());
-	//	exit(1);
-	//}
-	//if (SDLNet_Init() == -1) {
-	//	printf("SDLNet_Init: %s\n", SDLNet_GetError());
-	//	exit(2);
-	//}
-	//SuccessMSG("SDL_INIT SUCCESSSSSSS!\n");
-	//UDPsocket udpsockServer, udpsockClient;
-	//IPaddress ipaddress;
-	//UDPpacket* recv_packet;
-	//SDLNet_SocketSet socketset = NULL;
-	//int numused;
-	//static const int MAX_PACKET_SIZE = 1024;
-	//SDLNet_ResolveHost(&ipaddress, NULL, PORT);
-	//if (SDLNet_ResolveHost(&ipaddress, NULL, PORT) == -1) {
-	//	printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-	//	exit(1);
-	//}
-	//udpsockServer = SDLNet_UDP_Open(PORT);
-	//if (!udpsockServer) {
-	//	printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
-	//	exit(2);
-	//}
-	//else
-	//{
-	//	string Message = "Listening : " + &ipaddress.host + ' : ' + (int)ipaddress.port;
-	//	WarningMSG(Message.c_str());
-	//	WarningMSG("listening on 0.0.0.0:1024\n");
-	//}
-	//socketset = SDLNet_AllocSocketSet(10);
-	//if (socketset == NULL) {
-	//	fprintf(stderr, "Couldn't create socket set: %s\n", SDLNet_GetError());
-	//	exit(2);
-	//}
-	//numused = SDLNet_UDP_AddSocket(socketset, udpsockServer);
-	//if (numused == -1) {
-	//	printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
-	//	exit(2);
-	//}
-	//SuccessMSG("UDP SCOKET SUCCESS\n");
-	//SuccessMSG("STARTING SERVER LOOP\n");
-	//bool done = false;
-	//UDPpacket* packet = SDLNet_AllocPacket(1024);
-	//if (!packet) {
-	//	printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
-	//	exit(4);
-	//}
+	int PORT = 1023;
+	LogMSG("Starting server........\n");
+	if (SDL_Init(0) == -1) {
+		printf("SDL_Init: %s\n", SDL_GetError());
+		exit(1);
+	}
+	if (SDLNet_Init() == -1) {
+		printf("SDLNet_Init: %s\n", SDLNet_GetError());
+		exit(2);
+	}
+	SuccessMSG("SDL_INIT SUCCESSSSSSS!\n");
+	UDPsocket udpsockServer, udpsockClient;
+	IPaddress ipaddress;
+	UDPpacket* recv_packet;
+	SDLNet_SocketSet socketset = NULL;
+	int numused;
+	static const int MAX_PACKET_SIZE = 1024;
+	SDLNet_ResolveHost(&ipaddress, NULL, PORT);
+	if (SDLNet_ResolveHost(&ipaddress, NULL, PORT) == -1) {
+		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+		exit(1);
+	}
+	udpsockServer = SDLNet_UDP_Open(PORT);
+	if (!udpsockServer) {
+		printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
+		exit(2);
+	}
+	else
+	{
+		//string Message = "Listening : " + &ipaddress.host + ' : ' + (int)ipaddress.port;
+		//WarningMSG(Message.c_str());
+		WarningMSG("listening on 0.0.0.0:1024\n");
+	}
+	socketset = SDLNet_AllocSocketSet(10);
+	if (socketset == NULL) {
+		fprintf(stderr, "Couldn't create socket set: %s\n", SDLNet_GetError());
+		exit(2);
+	}
+	numused = SDLNet_UDP_AddSocket(socketset, udpsockServer);
+	if (numused == -1) {
+		printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
+		exit(2);
+	}
+	SuccessMSG("UDP SCOKET SUCCESS\n");
+	SuccessMSG("STARTING SERVER LOOP\n");
+	bool done = false;
+	UDPpacket* packet = SDLNet_AllocPacket(1024);
+	if (!packet) {
+		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
+		exit(4);
+	}
 
-	//while (!done)
-	//{
-	//	int numrecv;
-	//	numrecv = SDLNet_UDP_Recv(udpsockServer, packet);
-	//	if (numrecv != NULL) {
-	//		 do something with packet
-	//		cout << "we got a message" << endl;
-	//		for (int i = 0; i < packet->len; i++)
-	//		{
-	//			std::cout << (char)packet->data[i];
-	//		}
-	//		std::cout << std::endl;
-	//		packet->data[packet->len] = '\0';
-	//	}
-	//	if (numrecv)
-	//	{
-	//		 do something with packet
-	//		cout << "we got a message" << endl;
-	//	}
-	//}
-	//SDLNet_UDP_Close(udpsockServer);
-	//udpsockServer = NULL; //this helps us know that this UDPsocket is not valid anymore
+	while (!done)
+	{
+		int numrecv;
+		numrecv = SDLNet_UDP_Recv(udpsockServer, packet);
+		if (numrecv != NULL) {
+			// do something with packet
+			cout << "we got a message" << endl;
+			string logIn = "logIn";
+			string sData = "";
+			for (int i = 0; i < packet->len; i++)//Collect the data
+			{
+				//std::cout << (char)packet->data[i];
+				sData += (char)packet->data[i];
+				//cout << sData << endl;
+			}
+			if (logIn.find(sData) != std::string::npos)//When complete we can compare it
+			{
+				std::cout << "found!" << '\n';
+			}
+			std::cout << std::endl;
+			packet->data[packet->len] = '\0';
+		}
+	}
+	SDLNet_UDP_Close(udpsockServer);
+	udpsockServer = NULL; //this helps us know that this UDPsocket is not valid anymore
 	// number is now in your hosts byte order, ready to use.
 
 	//Natiivi kokeilu 2

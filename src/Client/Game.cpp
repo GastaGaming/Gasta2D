@@ -59,6 +59,30 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
 			displayString[i][j] = 0;
 		}
 	}
+	//std::string input = "logIn";
+	//std::string outPut;
+	//bool inputOk = false;
+	//std::cout << "Input your user Name\n" << std::endl;
+	//std::cin >> input;
+	//int dap = 0;
+	//udpConnection->Send(input);
+	//while (!udpConnection->recievedData())
+	//{
+	//	dap++;
+	//	if (dap < 100)
+	//	{
+	//		udpConnection->Send(input);
+	//		dap = 0;
+	//	}
+	//	packet = udpConnection->recievedData();
+	//}
+	//for (int i = 0; i < packet->len; i++)//Collect the data
+	//{
+	//	//std::cout << (char)packet->data[i];
+	//	outPut += (char)packet->data[i];
+	//	//cout << sData << endl;
+	//}
+	//std::cout << "JEEEEE" << std::endl;
 }
 void Game::HandleEvents()
 {
@@ -106,7 +130,7 @@ void Game::Update()
 			text(displayString[i], 20, 20, PACKET_LEN * 16, 16, 0, 0, 0);
 		}
 	}*/
-	std::string send = std::to_string(player.getComponent<PositionC>().x()) + " : "  + std::to_string(player.getComponent<PositionC>().y());
+	std::string send = std::to_string(player.getComponent<PositionC>().x()) + " : " + std::to_string(player.getComponent<PositionC>().y());
 	udpConnection->Send(send);
 }
 void Game::Render()

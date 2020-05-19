@@ -1,7 +1,7 @@
 var indexSectionsWithContent =
 {
-  0: "cegpst",
-  1: "cegpst"
+  0: "_abcdefghiklmnprstuvwy",
+  1: "_abcdefghiklmnprstuvwy"
 };
 
 var indexSectionNames =

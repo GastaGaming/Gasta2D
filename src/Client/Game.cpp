@@ -2,13 +2,18 @@
 #include "TextureLoader.h"
 #include "../ECS/ECS.h"
 #include "../ECS/Components.h"
+#include "../Network.h"
+#include <string> 
 //Erormessages
 using namespace DebugLog;
 Scene scene;
 
 SDL_Renderer* Game::renderer = nullptr; //This becaus SDL IS NOT INITIALIZED YET
-
 auto& player(scene.AddEntity());
+UDPConnection* udpConnection;
+UDPpacket* packet;
+#define DISPLAY_STRING_ROWS 20
+char displayString[DISPLAY_STRING_ROWS][256];
 
 Game::Game(){}
 Game::~Game(){}
@@ -43,6 +48,41 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
 
 	player.addComponent<PositionC>(0,0);
 	player.addComponent<SpriteC>("img/Dirt.png");
+
+	std::string IP = "192.168.1.44";
+	int32_t remotePort = 1023;
+	int32_t localPort = 1024;
+	udpConnection = new UDPConnection();
+	udpConnection->Init(IP, remotePort, localPort);
+	for (int i = 0; i < DISPLAY_STRING_ROWS; i++) {
+		for (int j = 0; j < 256; j++) {
+			displayString[i][j] = 0;
+		}
+	}
+	//std::string input = "logIn";
+	//std::string outPut;
+	//bool inputOk = false;
+	//std::cout << "Input your user Name\n" << std::endl;
+	//std::cin >> input;
+	//int dap = 0;
+	//udpConnection->Send(input);
+	//while (!udpConnection->recievedData())
+	//{
+	//	dap++;
+	//	if (dap < 100)
+	//	{
+	//		udpConnection->Send(input);
+	//		dap = 0;
+	//	}
+	//	packet = udpConnection->recievedData();
+	//}
+	//for (int i = 0; i < packet->len; i++)//Collect the data
+	//{
+	//	//std::cout << (char)packet->data[i];
+	//	outPut += (char)packet->data[i];
+	//	//cout << sData << endl;
+	//}
+	//std::cout << "JEEEEE" << std::endl;
 }
 void Game::HandleEvents()
 {
@@ -67,6 +107,31 @@ void Game::Update()
 	{
 		player.getComponent<SpriteC>().SetTexture("img/Water.png");
 	}
+
+	//Network
+	packet = udpConnection->recievedData();
+	#define PACKET_LEN packet->len
+	#define PACKET_DATA packet->data
+	static int currentRow = 0;
+	if (packet != NULL) {
+		for (int i = 0; i < PACKET_LEN; i++) {
+			displayString[currentRow][i] = udpConnection->packet->data[i];
+		}
+		displayString[currentRow][PACKET_LEN] = 0;
+		if (currentRow >= DISPLAY_STRING_ROWS) {
+			currentRow = 0;
+		}
+		else {
+			currentRow++;
+		}
+	}
+	/*for (int i = 0; i < currentRow; i++) {
+		if (displayString[i][0] != 0) {
+			text(displayString[i], 20, 20, PACKET_LEN * 16, 16, 0, 0, 0);
+		}
+	}*/
+	std::string send = std::to_string(player.getComponent<PositionC>().x()) + " : " + std::to_string(player.getComponent<PositionC>().y());
+	udpConnection->Send(send);
 }
 void Game::Render()
 {

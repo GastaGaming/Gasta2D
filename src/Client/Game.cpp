@@ -2,18 +2,21 @@
 #include "TextureLoader.h"
 #include "../ECS/ECS.h"
 #include "../ECS/Components.h"
-#include "../Network.h"
+//#include "../Network.h"
 #include <string> 
 //Erormessages
 using namespace DebugLog;
 Scene scene;
-
+SDL_Event Game::event;
 SDL_Renderer* Game::renderer = nullptr; //This becaus SDL IS NOT INITIALIZED YET
+
 auto& player(scene.AddEntity());
-UDPConnection* udpConnection;
-UDPpacket* packet;
+auto& wall(scene.AddEntity());
+//UDPConnection* udpConnection;
+//UDPpacket* packet;
 #define DISPLAY_STRING_ROWS 20
 char displayString[DISPLAY_STRING_ROWS][256];
+
 
 Game::Game(){}
 Game::~Game(){}
@@ -46,10 +49,17 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
 		isRunning = false;
 	}
 
-	player.addComponent<PositionC>(0,0);
+	player.addComponent<TransformC>(2);
 	player.addComponent<SpriteC>("img/Dirt.png");
+	player.addComponent<KeyboardController>();
+	player.addComponent<ColliderC>("player");
 
-	std::string IP = "192.168.1.44";
+
+	wall.addComponent<TransformC>(300.0f, 300.0f, 300, 20, 1);
+	wall.addComponent<SpriteC>("img/Dirt.png");
+	wall.addComponent<ColliderC>("wall");
+
+	/*std::string IP = "192.168.1.44";
 	int32_t remotePort = 1023;
 	int32_t localPort = 1024;
 	udpConnection = new UDPConnection();
@@ -58,7 +68,7 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
 		for (int j = 0; j < 256; j++) {
 			displayString[i][j] = 0;
 		}
-	}
+	}*/
 	//std::string input = "logIn";
 	//std::string outPut;
 	//bool inputOk = false;
@@ -86,7 +96,6 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
 }
 void Game::HandleEvents()
 {
-	SDL_Event event;
 	SDL_PollEvent(&event);
 	switch (event.type)
 	{
@@ -102,14 +111,21 @@ void Game::Update()
 	//Update objects
 	scene.Refresh();
 	scene.Update();//This will update all entities and then components
-	std::cout << player.getComponent<PositionC>().x() << " : " << player.getComponent<PositionC>().y() << "\n";
-	if (player.getComponent<PositionC>().x() > 100)
+	//player.getComponent<TransformC>().position.Add(Vector2D(5, 0));
+	std::cout << player.getComponent<TransformC>().position << "\n";
+	if (player.getComponent<TransformC>().position.x > 100)
 	{
 		player.getComponent<SpriteC>().SetTexture("img/Water.png");
 	}
+	if (Collision::AABB(player.getComponent<ColliderC>().collider, wall.getComponent<ColliderC>().collider))
+	{
+		player.getComponent<TransformC>().scale = 1;
+		player.getComponent<TransformC>().velocity * -1;
+		std::cout << "AU YOU HURTING ME" << "\n";
+	}
 
 	//Network
-	packet = udpConnection->recievedData();
+	/*packet = udpConnection->recievedData();
 	#define PACKET_LEN packet->len
 	#define PACKET_DATA packet->data
 	static int currentRow = 0;
@@ -124,14 +140,14 @@ void Game::Update()
 		else {
 			currentRow++;
 		}
-	}
+	}*/
 	/*for (int i = 0; i < currentRow; i++) {
 		if (displayString[i][0] != 0) {
 			text(displayString[i], 20, 20, PACKET_LEN * 16, 16, 0, 0, 0);
 		}
 	}*/
-	std::string send = std::to_string(player.getComponent<PositionC>().x()) + " : " + std::to_string(player.getComponent<PositionC>().y());
-	udpConnection->Send(send);
+	//std::string send = std::to_string(player.getComponent<PositionC>().x()) + " : " + std::to_string(player.getComponent<PositionC>().y());
+	//udpConnection->Send(send);
 }
 void Game::Render()
 {

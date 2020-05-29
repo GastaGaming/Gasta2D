@@ -5,7 +5,7 @@
 class SpriteC : public Component
 {
 private:
-	PositionC* position;
+	TransformC* transform;
 	SDL_Texture* texture;
 	SDL_Rect srcRect, destRect;
 public:
@@ -14,22 +14,28 @@ public:
 	{
 		SetTexture(path);
 	}
+	~SpriteC()
+	{
+		SDL_DestroyTexture(texture);
+	}
 	void SetTexture(const char* path)
 	{
 		texture = TextureLoader::LoadTexture(path);
 	}
 	void Init() override
 	{
-		position = &entity->getComponent<PositionC>();
+		transform = &entity->getComponent<TransformC>();
 
 		srcRect.x = srcRect.y = 0;
-		srcRect.w = srcRect.h = 32;
-		destRect.w = destRect.h = 64;
+		srcRect.w = transform->width;
+		srcRect.h = transform->height;
 	}
 	void Update() override
 	{
-		destRect.x = position->x();
-		destRect.y = position->y();
+		destRect.x = static_cast<int>(transform->position.x);
+		destRect.y = static_cast<int>(transform->position.y);
+		destRect.w = transform->width * transform->scale;
+		destRect.h = transform->height * transform->scale;
 	}
 	void Draw() override
 	{

@@ -1,5 +1,8 @@
 #include "SDL_image.h"
 #include <iostream>
+#include <vector>
+
+class ColliderC;
 
 class Game
 {
@@ -16,6 +19,7 @@ public:
 	bool running() { return isRunning; };
 	static SDL_Renderer *renderer;
 	static SDL_Event event;
+	static std::vector<ColliderC*> colliders;
 private:
 	bool isRunning;
 	SDL_Window* window;

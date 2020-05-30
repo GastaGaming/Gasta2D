@@ -10,8 +10,14 @@ Scene scene;
 SDL_Event Game::event;
 SDL_Renderer* Game::renderer = nullptr; //This becaus SDL IS NOT INITIALIZED YET
 
+std::vector<ColliderC*> Game::colliders;
+
 auto& player(scene.AddEntity());
 auto& wall(scene.AddEntity());
+auto& tile0(scene.AddEntity());
+auto& tile1(scene.AddEntity());
+auto& tile2(scene.AddEntity());
+
 //UDPConnection* udpConnection;
 //UDPpacket* packet;
 #define DISPLAY_STRING_ROWS 20
@@ -48,6 +54,14 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
 		ErrorMSG("Game Init() failed!");
 		isRunning = false;
 	}
+
+	tile0.addComponent<TileC>(200,200,32,32,0);
+	tile1.addComponent<TileC>(250, 250, 32, 32, 1);
+	tile1.addComponent<ColliderC>("Dirt");
+	tile2.addComponent<TileC>(150, 150, 32, 32, 2);
+	tile2.addComponent<ColliderC>("Grass");
+
+
 
 	player.addComponent<TransformC>(2);
 	player.addComponent<SpriteC>("img/Dirt.png");
@@ -121,9 +135,12 @@ void Game::Update()
 	{
 		player.getComponent<TransformC>().scale = 1;
 		player.getComponent<TransformC>().velocity * -1;
-		std::cout << "AU YOU HURTING ME" << "\n";
+		std::cout << "WALL HIT! : AU YOU HURTING ME" << "\n";
 	}
-
+	for (auto cc : colliders)
+	{
+		Collision::AABB(player.getComponent<ColliderC>(), *cc);
+	}
 	//Network
 	/*packet = udpConnection->recievedData();
 	#define PACKET_LEN packet->len

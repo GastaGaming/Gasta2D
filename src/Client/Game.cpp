@@ -2,11 +2,13 @@
 #include "TextureLoader.h"
 #include "../ECS/ECS.h"
 #include "../ECS/Components.h"
+#include "Map.h"
 //#include "../Network.h"
 #include <string> 
 //Erormessages
 using namespace DebugLog;
 Scene scene;
+Map* map;
 SDL_Event Game::event;
 SDL_Renderer* Game::renderer = nullptr; //This becaus SDL IS NOT INITIALIZED YET
 
@@ -14,9 +16,6 @@ std::vector<ColliderC*> Game::colliders;
 
 auto& player(scene.AddEntity());
 auto& wall(scene.AddEntity());
-auto& tile0(scene.AddEntity());
-auto& tile1(scene.AddEntity());
-auto& tile2(scene.AddEntity());
 
 //UDPConnection* udpConnection;
 //UDPpacket* packet;
@@ -55,13 +54,7 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
 		isRunning = false;
 	}
 
-	tile0.addComponent<TileC>(200,200,32,32,0);
-	tile1.addComponent<TileC>(250, 250, 32, 32, 1);
-	tile1.addComponent<ColliderC>("Dirt");
-	tile2.addComponent<TileC>(150, 150, 32, 32, 2);
-	tile2.addComponent<ColliderC>("Grass");
-
-
+	Map::LoadMap("img/map.tga");
 
 	player.addComponent<TransformC>(2);
 	player.addComponent<SpriteC>("img/Dirt.png");
@@ -179,4 +172,10 @@ void Game::Clean()
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
 	SuccessMSG("Game cleaned");
+}
+
+void Game::AddTile(int id, int x, int y)
+{
+	auto& tile(scene.AddEntity());
+	tile.addComponent<TileC>(x, y, 32, 32, id);
 }

@@ -30,7 +30,7 @@ public:
 			path = "img/Grass.png";
 			break;
 		case 2:
-			path = "img/Dirt.png";
+			path = "img/SpaceBG.png";
 			break;
 		default:
 			break;
@@ -43,7 +43,7 @@ public:
 		entity->addComponent<TransformC>(tileRect.x, tileRect.y, tileRect.w, tileRect.h, 1);
 		transform = &entity->getComponent<TransformC>();
 		
-		entity->addComponent<SpriteC>(path);
+		entity->addComponent<SpriteC>(path, true, 6);
 		sprite = &entity->getComponent<SpriteC>();
 	}
 };

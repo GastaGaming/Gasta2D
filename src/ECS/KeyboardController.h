@@ -6,9 +6,12 @@ class KeyboardController : public Component
 {
 public:
 	TransformC* transform;
+	SpriteC* sprite;
+	CameraC* camera;
 	void Init() override
 	{
 		transform = &entity->getComponent<TransformC>();
+		sprite = &entity->getComponent<SpriteC>();
 	}
 	void Update() override
 	{
@@ -18,15 +21,20 @@ public:
 			{
 			case SDLK_w:
 				transform->velocity.y = -1;
+				//sprite->Play("Walk");
 				break;
 			case SDLK_s:
 				transform->velocity.y = 1;
+				//sprite->Play("Walk");
 				break;
 			case SDLK_d:
 				transform->velocity.x = 1;
+				//sprite->Play("Walk");
 				break;
 			case SDLK_a:
 				transform->velocity.x = -1;
+				//sprite->Play("Walk");
+				//sprite->spriteFlip = SDL_FLIP_HORIZONTAL;
 				break;
 			default:
 				break;
@@ -38,15 +46,20 @@ public:
 			{
 			case SDLK_w:
 				transform->velocity.y = 0;
+				//sprite->Play("Idle");
 				break;
 			case SDLK_s:
 				transform->velocity.y = 0;
+				//sprite->Play("Idle");
 				break;
 			case SDLK_d:
 				transform->velocity.x = 0;
+				//sprite->Play("Idle");
 				break;
 			case SDLK_a:
 				transform->velocity.x = 0;
+				//sprite->Play("Idle");
+				//sprite->spriteFlip = SDL_FLIP_NONE;
 				break;
 			default:
 				break;

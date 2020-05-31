@@ -11,12 +11,22 @@ Scene scene;
 Map* map;
 SDL_Event Game::event;
 SDL_Renderer* Game::renderer = nullptr; //This becaus SDL IS NOT INITIALIZED YET
-
 std::vector<ColliderC*> Game::colliders;
-
+CameraC* Game::camera;
+auto& camerar(scene.AddEntity());
 auto& player(scene.AddEntity());
 auto& wall(scene.AddEntity());
 
+enum groupLabelds : std::size_t
+{
+	groupMap,
+	groupPlayers,
+	groupEnemies,
+	groupColliders
+};
+auto& tiles(scene.getGroup(groupMap));
+auto& players(scene.getGroup(groupPlayers));
+auto& enemies(scene.getGroup(groupEnemies));
 //UDPConnection* udpConnection;
 //UDPpacket* packet;
 #define DISPLAY_STRING_ROWS 20
@@ -56,15 +66,22 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
 
 	Map::LoadMap("img/map.tga");
 
+	camerar.addComponent<CameraC>();
+
 	player.addComponent<TransformC>(2);
 	player.addComponent<SpriteC>("img/Dirt.png");
+	//player.addComponent<SpriteC>("img/DirtA.png", true);
+	camerar.getComponent<CameraC>().AddTarget(&player);
+	camera = &camerar.getComponent<CameraC>();
+
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderC>("player");
-
+	player.AddGroup(groupMap);
 
 	wall.addComponent<TransformC>(300.0f, 300.0f, 300, 20, 1);
 	wall.addComponent<SpriteC>("img/Dirt.png");
 	wall.addComponent<ColliderC>("wall");
+	wall.AddGroup(groupMap);
 
 	/*std::string IP = "192.168.1.44";
 	int32_t remotePort = 1023;
@@ -118,12 +135,15 @@ void Game::Update()
 	//Update objects
 	scene.Refresh();
 	scene.Update();//This will update all entities and then components
+	//cam->Update();
 	//player.getComponent<TransformC>().position.Add(Vector2D(5, 0));
-	std::cout << player.getComponent<TransformC>().position << "\n";
-	if (player.getComponent<TransformC>().position.x > 100)
+
+	//std::cout << player.getComponent<TransformC>().position << "\n"; !!!!!!!!!!!!!!!!!!!!!!
+	
+	/*if (player.getComponent<TransformC>().position.x > 100)
 	{
 		player.getComponent<SpriteC>().SetTexture("img/Water.png");
-	}
+	}*/
 	if (Collision::AABB(player.getComponent<ColliderC>().collider, wall.getComponent<ColliderC>().collider))
 	{
 		player.getComponent<TransformC>().scale = 1;
@@ -134,6 +154,17 @@ void Game::Update()
 	{
 		Collision::AABB(player.getComponent<ColliderC>(), *cc);
 	}
+
+	Vector2D pVel = player.getComponent<TransformC>().velocity;
+	int pSpeed = player.getComponent<TransformC>().speed;
+	//Moving all the tiles
+	//for (auto t : tiles)
+	//{
+	//	//t->getComponent<TransformC>().velocity.x = -pVel.x * pSpeed;
+	//	//t->getComponent<TransformC>().velocity.y = -pVel.y * pSpeed;
+
+	//}
+
 	//Network
 	/*packet = udpConnection->recievedData();
 	#define PACKET_LEN packet->len
@@ -159,10 +190,23 @@ void Game::Update()
 	//std::string send = std::to_string(player.getComponent<PositionC>().x()) + " : " + std::to_string(player.getComponent<PositionC>().y());
 	//udpConnection->Send(send);
 }
+
 void Game::Render()
 {
 	SDL_RenderClear(renderer);
-	scene.Draw();
+	for (auto& t : tiles)
+	{
+		t->Draw();
+	}
+	for (auto& p : players)
+	{
+		p->Draw();
+	}
+	for (auto& e : enemies)
+	{
+		e->Draw();
+	}
+	//scene.Draw();
 	//Render objects
 	SDL_RenderPresent(renderer);
 }
@@ -178,4 +222,5 @@ void Game::AddTile(int id, int x, int y)
 {
 	auto& tile(scene.AddEntity());
 	tile.addComponent<TileC>(x, y, 32, 32, id);
+	tile.AddGroup(groupMap);
 }

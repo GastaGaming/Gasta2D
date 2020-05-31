@@ -1,9 +1,8 @@
 #include "SDL_image.h"
 #include <iostream>
 #include <vector>
-
 class ColliderC;
-
+class CameraC;
 class Game
 {
 public:
@@ -22,6 +21,8 @@ public:
 	static SDL_Renderer *renderer;
 	static SDL_Event event;
 	static std::vector<ColliderC*> colliders;
+	static CameraC* camera;
+
 private:
 	bool isRunning;
 	SDL_Window* window;

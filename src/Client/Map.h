@@ -56,7 +56,7 @@ public:
                 Uint32 pixel = getpixel(tempSurface, x, y);
                 SDL_Color rgb;
                 SDL_GetRGB(pixel, tempSurface->format, &rgb.r, &rgb.g, &rgb.b);
-                std::cout << "Pixel Y : " << y << " X :" << x << " RGB = " << rgb.r << "," << rgb.g << "," << rgb.b << std::endl;
+                //std::cout << "Pixel Y : " << y << " X :" << x << " RGB = " << rgb.r << "," << rgb.g << "," << rgb.b << std::endl;
                 int t = 0;
                 if (rgb.r == 255)
                 {

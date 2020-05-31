@@ -3,6 +3,7 @@
 #include "ECS.h"
 //#include "PositionC.h"
 #include "TransformC.h"
+#include "CameraC.h"
 #include "SpriteC.h"
 #include "KeyboardController.h"
 #include "ColliderC.h"

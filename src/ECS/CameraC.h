@@ -15,8 +15,8 @@ public:
 	}
 	void Update() override
 	{
-		camPosX = eTarget->getComponent<TransformC>().position.x;
-		camPosY = eTarget->getComponent<TransformC>().position.y;
+		camPosX = eTarget->getComponent<TransformC>().position.x + 16;//This is bad ofset based on sprite
+		camPosY = eTarget->getComponent<TransformC>().position.y + 16;//This is bad ofset based on sprite
 		//std::cout << "Camera pos : " << camPosX << "," << camPosY << std::endl;
 
 	}

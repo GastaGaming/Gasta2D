@@ -8,7 +8,14 @@ class Game
 public:
 	Game();
 	~Game();
-
+	enum groupLabelds : std::size_t
+	{
+		groupMap,
+		groupPlayers,
+		groupEnemies,
+		groupOrbs,
+		groupColliders
+	};
 	void Init(const char* title, int width, int height, bool fullscreen);
 	void HandleEvents();
 	void Update();
@@ -17,7 +24,6 @@ public:
 
 	bool running() { return isRunning; };
 
-	static void AddTile(int id, int x, int y);
 	static SDL_Renderer *renderer;
 	static SDL_Event event;
 	static std::vector<ColliderC*> colliders;

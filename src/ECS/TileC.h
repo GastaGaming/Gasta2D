@@ -12,22 +12,23 @@ public:
 	int tileID;
 	char* path;
 	TileC() = default;
-
-	TileC(int x, int y, int w, int h, int id)
+	~TileC(){}
+	int sc = 1;
+	TileC(int x, int y, int w, int h, int id, int scale)
 	{
 		tileRect.x = x;
 		tileRect.y = y;
 		tileRect.w = w;
 		tileRect.h = h;
 		tileID = id;
-
+		sc = scale;
 		switch (tileID)
 		{
 		case 0:
-			path = "img/Water.png";
+			path = "img/SpacePinkBlock.png";
 			break;
 		case 1:
-			path = "img/Grass.png";
+			path = "img/SpaceGreenBlock.png";
 			break;
 		case 2:
 			path = "img/SpaceBG.png";
@@ -42,6 +43,7 @@ public:
 	{
 		entity->addComponent<TransformC>(tileRect.x, tileRect.y, tileRect.w, tileRect.h, 1);
 		transform = &entity->getComponent<TransformC>();
+		transform->scale = sc;
 		
 		entity->addComponent<SpriteC>(path, true, 6);
 		sprite = &entity->getComponent<SpriteC>();

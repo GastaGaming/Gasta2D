@@ -37,44 +37,69 @@ Uint32 getpixel(SDL_Surface* surface, int x, int y)
 class Map
 {
 public:
-	Map() {};
-	~Map() {};
-
-	static void LoadMap(std::string path)
-	{
-		//char tile;
-		//std::fstream mapImage;"img/map.tga"
-		SDL_Surface* tempSurface = IMG_Load(path.c_str());
-		//mapImage.open(path);
-		for (int y = 0; y < tempSurface->h; y++)
-		{
-			for (int x = 0; x < tempSurface->w; x++)
-			{
-				//mapImage.get(tile);
-				//Game::AddTile(atoi(&tile), x * 32, y * 32);
-				//mapImage.ignore();
-                Uint32 pixel = getpixel(tempSurface, x, y);
-                SDL_Color rgb;
-                SDL_GetRGB(pixel, tempSurface->format, &rgb.r, &rgb.g, &rgb.b);
-                //std::cout << "Pixel Y : " << y << " X :" << x << " RGB = " << rgb.r << "," << rgb.g << "," << rgb.b << std::endl;
-                int t = 0;
-                if (rgb.r == 255)
-                {
-                    t = 0;
-                }
-                if (rgb.g == 255)
-                {
-                    t = 1;
-                }
-                if (rgb.b == 255)
-                {
-                    t = 2;
-                }
-                Game::AddTile(t, x * 32, y * 32);
-			}
-		}
-		//mapImage.close();
-        SDL_FreeSurface(tempSurface);
-	}
+	Map(const char* mfp, int ms, int ts, Scene& s);
+    ~Map();
+    void LoadMap();
+    void AddTile(int id, int x, int y);
 private:
+    const char* mapFilePath;
+    int mapScale;
+    int tileSize;
+    Scene* activeScene;
 };
+Map::Map(const char* mfp, int ms, int ts, Scene& s)
+{
+    mapFilePath = mfp;
+    mapScale = ms;
+    tileSize = ts;
+    activeScene = &s;
+}
+Map::~Map()
+{
+
+}
+
+void Map::LoadMap()
+{
+    //char tile;
+        //std::fstream mapImage;"img/map.tga"
+    SDL_Surface* tempSurface = IMG_Load(mapFilePath);
+    //mapImage.open(path);
+    for (int y = 0; y < tempSurface->h; y++)
+    {
+        for (int x = 0; x < tempSurface->w; x++)
+        {
+            //mapImage.get(tile);
+            //Game::AddTile(atoi(&tile), x * 32, y * 32);
+            //mapImage.ignore();
+            Uint32 pixel = getpixel(tempSurface, x, y);
+            SDL_Color rgb;
+            SDL_GetRGB(pixel, tempSurface->format, &rgb.r, &rgb.g, &rgb.b);
+            //std::cout << "Pixel Y : " << y << " X :" << x << " RGB = " << rgb.r << "," << rgb.g << "," << rgb.b << std::endl;
+            int t = 0;
+            if (rgb.r == 255)
+            {
+                t = 0;
+            }
+            if (rgb.g == 255)
+            {
+                t = 1;
+            }
+            if (rgb.b == 255)
+            {
+                t = 2;
+            }
+            AddTile(t, x * tileSize * mapScale, y * tileSize * mapScale);
+        }
+    }
+}
+void Map::AddTile(int id, int x, int y)
+{
+    auto& tile(activeScene->AddEntity());
+    tile.addComponent<TileC>(x, y, tileSize, tileSize, id, mapScale);
+    tile.AddGroup(Game::groupMap);
+    if (id == 1)
+    {
+        tile.addComponent<ColliderC>("wals");
+    }
+}

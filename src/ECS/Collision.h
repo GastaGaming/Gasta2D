@@ -26,9 +26,10 @@ bool Collision::AABB(const ColliderC& colA, const ColliderC& colB)
 {
 	if (AABB(colA.collider, colB.collider))
 	{
-		if (colA.entity != colB.entity)
+		//Can hit itself and cannot hit objects with same tag?
+		if (colA.entity != colB.entity && colA.tag != colB.tag)
 		{
-			std::cout << colA.tag << " hit: " << colB.tag << std::endl;
+			//std::cout << colA.tag << " hit: " << colB.tag << std::endl;
 			return true; //Collision
 
 		}

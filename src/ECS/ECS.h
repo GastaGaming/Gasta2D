@@ -62,7 +62,6 @@ public:
 	bool HasGroup(Group mGroup){	return groupBitSet[mGroup];	} // Retuns true or false, debendig if certain bit is either 1 or 0}
 	void AddGroup(Group mGroup); //{ groupBitSet[mGroup] = true; scene.AddToGroup(this, mGroup); }
 	void DeleteGroup(Group mGroup) { groupBitSet[mGroup] = false; }
-
 	template <typename T> bool hasComponent() const //Can be asked does entity have components
 	{
 		return componetBitset[getComponentID<T>];

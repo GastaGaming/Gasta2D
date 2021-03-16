@@ -1,6 +1,3 @@
-/*This source code copyrighted by Lazy Foo' Productions (2004-2020)
-and may not be redistributed without written permission.*/
-
 //Using SDL and standard IO
 //#include <SDL.h>
 #include <SDL.h>
@@ -15,7 +12,7 @@ int main(int argc, const char* argv[])
 	Uint32 frameStar;
 	float_t frameTime;
 	game = new Game();
-	game->Init("Gasta2D", 800, 640, false);
+	game->Init("Gasta2D", 1280, 720, false);
 	while (game->running())
 	{
 		frameStar = SDL_GetTicks();

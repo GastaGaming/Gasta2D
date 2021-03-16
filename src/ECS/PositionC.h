@@ -2,30 +2,28 @@
 #include "Components.h"
 class PositionC : public Component
 {
-private:
-	int xpos;
-	int ypos;
 public:
+	Vector2D pos;
+	PositionC()
+	{
+		pos.x = 0;
+		pos.y = 0;
+	}
 	PositionC(int x, int y)
 	{
-		xpos = x;
-		ypos = y;
+		pos.x = x;
+		pos.y = y;
 	}
-	int x() { return xpos; }
-	int y() { return ypos; }
-	void Init() override
-	{
-		xpos = 0;
-		ypos = 0;
-	}
+	int x() { return pos.x; }
+	int y() { return pos.y; }
 	void Update() override
 	{
-		xpos++;
-		ypos++;
+		pos.x++;
+		pos.y++;
 	}
 	void setPos(int x, int y)
 	{
-		xpos = x;
-		ypos = y;
+		pos.x = x;
+		pos.y = y;
 	}
 };

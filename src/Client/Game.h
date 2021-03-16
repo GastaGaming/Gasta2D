@@ -1,12 +1,21 @@
 #include "SDL_image.h"
 #include <iostream>
-
+#include <vector>
+class ColliderC;
+class CameraC;
 class Game
 {
 public:
 	Game();
 	~Game();
-
+	enum groupLabelds : std::size_t
+	{
+		groupMap,
+		groupPlayers,
+		groupEnemies,
+		groupOrbs,
+		groupColliders
+	};
 	void Init(const char* title, int width, int height, bool fullscreen);
 	void HandleEvents();
 	void Update();
@@ -14,7 +23,12 @@ public:
 	void Clean();
 
 	bool running() { return isRunning; };
+
 	static SDL_Renderer *renderer;
+	static SDL_Event event;
+	static std::vector<ColliderC*> colliders;
+	static CameraC* camera;
+
 private:
 	bool isRunning;
 	SDL_Window* window;

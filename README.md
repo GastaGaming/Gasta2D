@@ -42,3 +42,6 @@ http://www.doxygen.nl/manual/config.html
 http://www.doxygen.nl/manual/docblocks.html
 ### If doxygen fails to run dot needs graphviz-2.38 installed and %PATH
 for %f in (*dot) do dot %~nxf -Tpng -o %~nf.png
+
+### Current Status
+![Gasta2D](/img/Gasta2D.gif?raw=true "Gasta2D the Game")

@@ -11,7 +11,13 @@ SDL_Texture* TextureLoader::LoadTexture(const char* texture)
 	return tex;
 }
 
-void TextureLoader::Draw(SDL_Texture* tex, SDL_Rect src, SDL_Rect dest)
+void TextureLoader::Draw(SDL_Texture* tex, SDL_Rect src, SDL_Rect dest, SDL_RendererFlip flip)
 {
-	SDL_RenderCopy(Game::renderer, tex, &src, &dest);
+	//SDL_RenderCopy(Game::renderer, tex, &src, &dest);
+	SDL_RenderCopyEx(Game::renderer, tex, &src, &dest, 45, NULL, flip);//EX ALLOWS US TO FLIP AND ANGLE THE TEXTURE
+}
+void TextureLoader::Draw(SDL_Texture* tex, SDL_Rect src, SDL_Rect dest, float angle, SDL_RendererFlip flip)
+{
+	//SDL_RenderCopy(Game::renderer, tex, &src, &dest);
+	SDL_RenderCopyEx(Game::renderer, tex, &src, &dest, angle, NULL, flip);//EX ALLOWS US TO FLIP AND ANGLE THE TEXTURE
 }

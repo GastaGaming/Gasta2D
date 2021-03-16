@@ -12,7 +12,7 @@ int main(int argc, const char* argv[])
 	Uint32 frameStar;
 	float_t frameTime;
 	game = new Game();
-	game->Init("Gasta2D", 800, 640, false);
+	game->Init("Gasta2D", 1280, 720, false);
 	while (game->running())
 	{
 		frameStar = SDL_GetTicks();

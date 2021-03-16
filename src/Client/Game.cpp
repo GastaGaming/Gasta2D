@@ -1,17 +1,26 @@
 #include "Game.h"
 #include "TextureLoader.h"
-#include "../ECS/ECS.h"
-#include "../ECS/Components.h"
+#include "Map.h"
+#include "OrbSpawnerC.h"
 //#include "../Network.h"
 #include <string> 
 //Erormessages
 using namespace DebugLog;
-Scene scene;
+Map* map;
 SDL_Event Game::event;
 SDL_Renderer* Game::renderer = nullptr; //This becaus SDL IS NOT INITIALIZED YET
-
+std::vector<ColliderC*> Game::colliders;
+CameraC* Game::camera;
+Scene scene;
+auto& camerar(scene.AddEntity());
 auto& player(scene.AddEntity());
 auto& wall(scene.AddEntity());
+auto& orbSpawner(scene.AddEntity());
+
+auto& tiles(scene.getGroup(Game::groupMap));
+auto& players(scene.getGroup(Game::groupPlayers));
+auto& enemies(scene.getGroup(Game::groupEnemies));
+auto& orbs(scene.getGroup(Game::groupOrbs));
 //UDPConnection* udpConnection;
 //UDPpacket* packet;
 #define DISPLAY_STRING_ROWS 20
@@ -48,16 +57,31 @@ void Game::Init(const char* title, int width, int height, bool fullscreen)
 		ErrorMSG("Game Init() failed!");
 		isRunning = false;
 	}
+	map = new Map("img/map.tga", 4, 32, scene);
+	map->LoadMap();
+	//Map::LoadMap("img/map.tga");
 
-	player.addComponent<TransformC>(2);
-	player.addComponent<SpriteC>("img/Dirt.png");
+	camerar.addComponent<CameraC>();
+
+	player.addComponent<TransformC>(500,1000,2);
+	int numOfAnimation = 4;
+	std::vector<int> framesInAnimation = { 4,4,4,4 };
+	std::vector<int> delayPerAnimation = { 50,50,50,50};
+
+	player.addComponent<SpriteC>("img/SpaceShip.png", true, numOfAnimation, framesInAnimation, delayPerAnimation);
+	//player.addComponent<SpriteC>("img/DirtA.png", true);
+	camerar.getComponent<CameraC>().AddTarget(&player);
+	camera = &camerar.getComponent<CameraC>();
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderC>("player");
-
+	player.AddGroup(groupMap);
 
 	wall.addComponent<TransformC>(300.0f, 300.0f, 300, 20, 1);
 	wall.addComponent<SpriteC>("img/Dirt.png");
 	wall.addComponent<ColliderC>("wall");
+	wall.AddGroup(groupMap);
+
+	orbSpawner.addComponent<OrbSpawner>(10, scene);
 
 	/*std::string IP = "192.168.1.44";
 	int32_t remotePort = 1023;
@@ -108,20 +132,58 @@ void Game::HandleEvents()
 }
 void Game::Update()
 {
-	//Update objects
-	scene.Refresh();
-	scene.Update();//This will update all entities and then components
+	//cam->Update();
 	//player.getComponent<TransformC>().position.Add(Vector2D(5, 0));
-	std::cout << player.getComponent<TransformC>().position << "\n";
-	if (player.getComponent<TransformC>().position.x > 100)
+
+	//std::cout << player.getComponent<TransformC>().position << "\n"; !!!!!!!!!!!!!!!!!!!!!!
+	
+	/*if (player.getComponent<TransformC>().position.x > 100)
 	{
 		player.getComponent<SpriteC>().SetTexture("img/Water.png");
+	}*/
+
+	//For the collision check record position before update
+	ColliderC playerCol = player.getComponent<ColliderC>();
+	Vector2D playerPos = player.getComponent<TransformC>().position;
+	std::vector<Vector2D> orbPos;
+	for each (Entity * or in orbSpawner.getComponent<OrbSpawner>().orbs)
+	{
+		orbPos.push_back(or->getComponent<TransformC>().position);
 	}
+	//Update objects these must hapen before update
+	scene.Refresh();
+	scene.Update();//This will update all entities and then components
+
 	if (Collision::AABB(player.getComponent<ColliderC>().collider, wall.getComponent<ColliderC>().collider))
 	{
-		player.getComponent<TransformC>().scale = 1;
-		player.getComponent<TransformC>().velocity * -1;
-		std::cout << "AU YOU HURTING ME" << "\n";
+		//player.getComponent<TransformC>().scale = 1;
+		//player.getComponent<TransformC>().velocity * -1;
+		player.getComponent<TransformC>().position = playerPos;
+		std::cout << "WALL HIT! : AU YOU HURTING ME" << "\n";
+	}
+	for (auto cc : colliders)
+	{
+		int oCount = 0;
+		if (Collision::AABB(playerCol, *cc))
+		{
+			//player.getComponent<TransformC>().scale = 4;
+			//player.getComponent<TransformC>().velocity * 0;
+			player.getComponent<TransformC>().position = playerPos;
+			std::cout << "WALL HIT! : AU YOU HURTING ME" << "\n";
+		}
+		for each (Entity* or in orbSpawner.getComponent<OrbSpawner>().orbs)
+		{
+			if (Collision::AABB(or->getComponent<ColliderC>(), *cc))
+			{
+				or ->getComponent<TransformC>().position = orbPos[oCount];
+				or->getComponent<TransformC>().velocity * -1;
+				//or->getComponent<TransformC>().position.x = or ->getComponent<TransformC>().position.x + or->getComponent<TransformC>().velocity.x * 5;
+				//or->getComponent<TransformC>().position.y = or ->getComponent<TransformC>().position.y + or->getComponent<TransformC>().velocity.y * 5;
+
+
+			}
+			oCount++;
+		}
 	}
 
 	//Network
@@ -149,10 +211,27 @@ void Game::Update()
 	//std::string send = std::to_string(player.getComponent<PositionC>().x()) + " : " + std::to_string(player.getComponent<PositionC>().y());
 	//udpConnection->Send(send);
 }
+
 void Game::Render()
 {
 	SDL_RenderClear(renderer);
-	scene.Draw();
+	for (auto& t : tiles)
+	{
+		t->Draw();
+	}
+	for (auto& p : players)
+	{
+		p->Draw();
+	}
+	for (auto& e : enemies)
+	{
+		e->Draw();
+	}
+	for (auto& o : orbs)
+	{
+		o->Draw();
+	}
+	//scene.Draw();
 	//Render objects
 	SDL_RenderPresent(renderer);
 }
